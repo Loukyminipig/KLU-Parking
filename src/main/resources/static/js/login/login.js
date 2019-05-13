@@ -34,23 +34,14 @@ layui.config({
 	        	  		console.log(r);
 	        	  		if(r==200){
 					  		top.layer.msg("登陆成功！");
-					  		window.location.href='admin';
+					  		window.location.href='/index';
 		        	  	}
-		        	  	else if(r==1){
+		        	  	else {
 		        	  		layer.open({
-		                        content: '密码错误！',
-		                        btn: ['确认'],
-		                        yes: function(index, layero) {
-		                            window.location.href='admin';
-		                        }
-		                    });
-		        	  	}
-		        	  	else if(r==2){
-		        	  		layer.open({
-		                        content: '用户不存在！',
+		                        content: '用户不存在或者，账号/密码错误',
 		                        btn: ['确认',],
 		                        yes: function(index, layero) {
-		                            window.location.href='admin';
+		                            window.location.href='/login';
 		                        }
 		                    });
 		        	  	} 			

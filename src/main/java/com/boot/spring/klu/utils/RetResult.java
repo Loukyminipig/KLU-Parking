@@ -1,4 +1,4 @@
-package utils;
+package com.boot.spring.klu.utils;
 
 /**
  * @auth liweipeng
