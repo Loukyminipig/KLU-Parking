@@ -21,7 +21,7 @@ layui.config({
 		console.log(data.field);
  		var index;
  		 $.ajax({//异步请求返回给后台
-	    	  url:'/toLogin',
+	    	  url:'/admin/toLogin',
 	    	  type:'POST',
 	          data : data.field,
 	    	  dataType:'json',
@@ -34,14 +34,14 @@ layui.config({
 	        	  		console.log(r);
 	        	  		if(r==200){
 					  		top.layer.msg("登陆成功！");
-					  		window.location.href='/index';
+					  		window.location.href='/admin/main';
 		        	  	}
 		        	  	else {
 		        	  		layer.open({
 		                        content: '用户不存在或者，账号/密码错误',
 		                        btn: ['确认',],
 		                        yes: function(index, layero) {
-		                            window.location.href='/login';
+		                            window.location.href='/admin/login';
 		                        }
 		                    });
 		        	  	} 			
