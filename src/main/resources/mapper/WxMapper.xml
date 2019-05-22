@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.boot.spring.klu.mapper.WxMapper">
-	<insert id="insertUser"	parameterType="com.boot.spring.klu.entity.User">
-		insert into
-		user_parking(id,open_id,username,tel,car_no,parking_id,parking_time)
-		values(#{id},#{open_id},#{username},#{tel},#{car_no},#{parking_id},#{parking_time})
-		<selectKey resultType="long" keyProperty="id" order="AFTER">
+	<insert id="insertUser" parameterType="com.boot.spring.klu.entity.UserParking">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
 			select LAST_INSERT_ID()
 		</selectKey>
+		insert into	user_parking(id,open_id,username,tel,car_no,parking_id,parking_time)
+		values(#{id},#{open_id},#{username},#{tel},#{car_no},#{parking_id},#{parking_time})
 	</insert>
+	<select id="getAllUsers" resultType="com.boot.spring.klu.entity.UserParking">
+        select id,open_id,username,tel,car_no,parking_id,parking_time from user_parking
+    </select>
 </mapper>

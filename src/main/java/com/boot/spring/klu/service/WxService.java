@@ -1,9 +1,11 @@
 package com.boot.spring.klu.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.boot.spring.klu.entity.User;
+import com.boot.spring.klu.entity.UserParking;
 import com.boot.spring.klu.mapper.WxMapper;
 
 /**
@@ -20,7 +22,11 @@ public class WxService {
 		return wxMapper.appointment(name, tel, car_no, order_time, uuid, parking_id, open_id);
 	}
 
-	public long appointment(User user) {
+	public long appointment(UserParking user) {
 		return wxMapper.insertUser(user);
+	}
+
+	public List<UserParking> appointmentList() {
+		return wxMapper.getAllUsers();
 	}
 }

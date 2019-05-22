@@ -1,8 +1,10 @@
 package com.boot.spring.klu.mapper;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
-import com.boot.spring.klu.entity.User;
+import com.boot.spring.klu.entity.UserParking;
 
 /**
 *@auth liweipeng 
@@ -14,6 +16,8 @@ public interface WxMapper {
 
 	public String appointment(String name, String tel, String car_no, String order_time, String uuid, String parking_id, String open_id);
 
-	public long insertUser(User user);
+	public long insertUser(UserParking user);
+
+	public List<UserParking> getAllUsers();
 
 }
