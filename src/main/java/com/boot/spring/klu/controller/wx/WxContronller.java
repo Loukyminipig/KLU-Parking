@@ -81,8 +81,8 @@ public class WxContronller {
 
         // 配置请求参数
 		Map<String, String> param = new HashMap<>();
-		param.put("appid", "wx306086b4a938f086");
-		param.put("secret", "c5c1d6eedc547bdb33e7e8314d3915b6");
+		param.put("appid", "");
+		param.put("secret", "");
 		param.put("js_code", code);
 		param.put("grant_type", UserCode.GRANT_TYPE);
 
