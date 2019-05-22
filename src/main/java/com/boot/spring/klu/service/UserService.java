@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.boot.spring.klu.entity.User;
 import com.boot.spring.klu.mapper.UserMapper;
-import com.boot.spring.klu.mapper.WxMapper;
 
 /**
 *@auth liweipeng 

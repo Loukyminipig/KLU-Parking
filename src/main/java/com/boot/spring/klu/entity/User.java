@@ -8,11 +8,6 @@ public class User {
 	String open_id;
 	String username;
 
-	public User(String open_id, String username) {
-		this.open_id = open_id;
-		this.username = username;
-	}
-
 	public String getOpenId() {
 		return open_id;
 	}
@@ -29,4 +24,12 @@ public class User {
 		this.username = username;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("user=[ ").append("id=").append(open_id);
+		builder.append(", name=").append(username);
+		builder.append(" ]");
+		return builder.toString();
+	}
 }

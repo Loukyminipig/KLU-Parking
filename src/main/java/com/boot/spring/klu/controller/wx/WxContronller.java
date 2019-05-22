@@ -1,21 +1,12 @@
 package com.boot.spring.klu.controller.wx;
 
-import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +15,17 @@ import com.boot.spring.klu.entity.User;
 import com.boot.spring.klu.entity.UserParking;
 import com.boot.spring.klu.service.UserService;
 import com.boot.spring.klu.service.WxService;
+import com.boot.spring.klu.utils.HttpClientUtil;
+import com.boot.spring.klu.utils.RetResponse;
+import com.boot.spring.klu.utils.RetResult;
 import com.boot.spring.klu.utils.UUIDUtils;
 import com.boot.spring.klu.utils.UserCode;
 
 @RestController
 @RequestMapping("/wx")
 public class WxContronller {
+	private static final Object CAN_NOT_FIND = null;
+	
 	@Autowired
 	private WxService wxService;
 	
@@ -79,64 +75,34 @@ public class WxContronller {
 	}
 
 	@RequestMapping("/login")
-	public String login(HttpServletRequest httpRequest) {
+	public RetResult<User> login(HttpServletRequest httpRequest) {
 		String code = httpRequest.getParameter("code");
 		System.out.println("wx code = " + code);
 
+        // 配置请求参数
 		Map<String, String> param = new HashMap<>();
-		param.put("appid", "");
-		param.put("secret", "");
+		param.put("appid", "wx306086b4a938f086");
+		param.put("secret", "c5c1d6eedc547bdb33e7e8314d3915b6");
 		param.put("js_code", code);
-		param.put("grant_type", "authorization_code");
+		param.put("grant_type", UserCode.GRANT_TYPE);
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		String resultString = "";
-		CloseableHttpResponse response = null;
-		try {
-			// 创建http GET请求
-			URIBuilder builder = new URIBuilder("https://api.weixin.qq.com/sns/jscode2session");
-			for (String key : param.keySet()) {
-				builder.addParameter(key, param.get(key));
-			}
-			URI uri = builder.build();
-			System.out.println(uri.toString());
-			// 创建http GET请求
-			HttpGet httpGet = new HttpGet(uri);
-			// 执行请求
-			response = httpclient.execute(httpGet);
-			// 判断返回状态是否为200
-			if (response.getStatusLine().getStatusCode() == 200) {
-				resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
-				System.out.println("resultString===>" + resultString);
-				JSONObject jsonObject = JSONObject.parseObject(resultString);
-				String session_key = jsonObject.get("session_key").toString();
-				String open_id = jsonObject.get("openid").toString();
-				User user = userService.selectByOpenId(open_id);
-				if(user!= null) {
-					System.out.println("user select");
-					resultString = open_id;
-				} else {
-					System.out.println("user insert");
-					resultString = open_id;
-					User user_insert = new User(open_id, null);
-					userService.insertUser(user_insert);
-				}
-			} else {
-				System.out.println("fail=============");
-			}
-			System.out.println("final=" + resultString);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (response != null) {
-					response.close();
-				}
-				httpclient.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return resultString;
+		// 发送请求
+        String wxResult = HttpClientUtil.doGet(UserCode.OPEN_ID_URL, param);
+        JSONObject jsonObject = JSONObject.parseObject(wxResult);
+        // 获取参数返回的
+        String open_id = jsonObject.get("openid").toString();
+        //TODO: 这里mybatis的返回值问题依旧存在，需要解决
+        User user = userService.selectByOpenId(open_id);
+        if(user == CAN_NOT_FIND){
+            User insert_user = new User();
+            insert_user.setOpenId(open_id);
+            System.out.println("insert_user:"+insert_user.toString());
+            // 添加到数据库
+            userService.insertUser(insert_user);
+            return RetResponse.makeOKRsp(insert_user);
+        }else{
+        	System.out.println("sel====>");
+    		return RetResponse.makeOKRsp(user);
+        }
 	}
 }

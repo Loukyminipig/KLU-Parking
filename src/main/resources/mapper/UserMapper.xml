@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.boot.spring.klu.mapper.UserMapper">
 	<select id="selectByOpenId" resultType="com.boot.spring.klu.entity.User">
-       select * from user where open_id=${value}
+       select * from user where open_id= #{param1}
     </select>
     <insert id="insert" parameterType="com.boot.spring.klu.entity.User">
 		insert into	user(open_id,username)

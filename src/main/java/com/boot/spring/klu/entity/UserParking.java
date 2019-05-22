@@ -83,7 +83,7 @@ public class UserParking {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("user=[ ").append("id=").append(id);
+		builder.append("user_parking=[ ").append("id=").append(id);
 		builder.append(", openId=").append(open_id);
 		builder.append(", name=").append(username);
 		builder.append(", tel=").append(tel);
