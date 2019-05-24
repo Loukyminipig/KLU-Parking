@@ -5,10 +5,17 @@
 		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
 			select LAST_INSERT_ID()
 		</selectKey>
-		insert into	user_parking(id,open_id,username,tel,car_no,parking_id,parking_time)
-		values(#{id},#{open_id},#{username},#{tel},#{car_no},#{parking_id},#{parking_time})
+		insert into	user_parking(id,open_id,username,tel,car_no,parking_id,parking_time,remark)
+		values(#{id},#{open_id},#{username},#{tel},#{car_no},#{parking_id},#{parking_time},#{remark})
 	</insert>
 	<select id="getAllUsers" resultType="com.boot.spring.klu.entity.UserParking">
         select id,open_id,username,tel,car_no,parking_id,parking_time from user_parking
     </select>
+    <select id="getParkingNotice" resultType="com.boot.spring.klu.entity.ParkingNotice">
+        select * from ParkingNotice order by notice_time desc limit 1
+    </select>
+    
+    <delete id="cancelParking" >
+    	delete from user_parking where id =#{id}
+    </delete>
 </mapper>

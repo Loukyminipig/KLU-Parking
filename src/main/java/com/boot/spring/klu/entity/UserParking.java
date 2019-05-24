@@ -12,9 +12,42 @@ public class UserParking {
 	String car_no;
 	String parking_id;
 	String parking_time;
+	String remark;
+
+	public String getOpen_id() {
+		return open_id;
+	}
+
+	public void setOpen_id(String open_id) {
+		this.open_id = open_id;
+	}
+
+	public String getCar_no() {
+		return car_no;
+	}
+
+	public void setCar_no(String car_no) {
+		this.car_no = car_no;
+	}
+
+	public String getParking_time() {
+		return parking_time;
+	}
+
+	public void setParking_time(String parking_time) {
+		this.parking_time = parking_time;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public UserParking(long id, String open_id, String username, String tel, String car_no, String parking_id,
-			String parking_time) {
+			String parking_time,String remark) {
 		this.id = id;
 		this.open_id = open_id;
 		this.username = username;
@@ -22,6 +55,7 @@ public class UserParking {
 		this.car_no = car_no;
 		this.parking_id = parking_id;
 		this.parking_time = parking_time;
+		this.remark=remark;
 	}
 
 	public long getId() {

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.boot.spring.klu.entity.ParkingLot;
+import com.boot.spring.klu.entity.ParkingNotice;
 import com.boot.spring.klu.entity.User;
 import com.boot.spring.klu.entity.UserParking;
 import com.boot.spring.klu.service.UserService;
@@ -45,16 +47,16 @@ public class WxContronller {
 
 	@RequestMapping(value = "/appointment")
 	public int appointment(HttpServletRequest httpRequest) {
-		String name = httpRequest.getParameter("name");
+		String username = httpRequest.getParameter("username");
 		String tel = httpRequest.getParameter("tel");
 		String car_no = httpRequest.getParameter("car_no");
-		String order_time = httpRequest.getParameter("order_time");
-		String comments = httpRequest.getParameter("comments");
+		String parking_time = httpRequest.getParameter("parking_time");
+		String remark = httpRequest.getParameter("remark");
 		long id = UUIDUtils.getUUIDSimple();
 		System.out.println("id=-" + id);
 		String parking_id = "111111";
 		String open_id = "xxxxxx";
-		UserParking user = new UserParking(UUIDUtils.getUUIDSimple(), open_id, name, tel, car_no, parking_id, order_time);
+		UserParking user = new UserParking(UUIDUtils.getUUIDSimple(), open_id, username, tel, car_no, parking_id, parking_time,remark);
 		System.out.println(user);
 		long result = wxService.appointment(user);
 		System.out.println("return====>" + result);
@@ -105,4 +107,54 @@ public class WxContronller {
     		return RetResponse.makeOKRsp(user);
         }
 	}
+	/**
+	 * @auth lijinpeng 2019年5月24日下午16:00
+	 * @param
+	 * @return code
+	 * @description 取消预约
+	 */
+	
+	@RequestMapping(value = "/cancelParking")
+	public int cancelParking(HttpServletRequest httpRequest) {
+		String id=httpRequest.getParameter("id");
+		int code = -1;
+		boolean result = wxService.cancelParking(id);
+		if(result) {
+		code = 0;
+		}else {
+			code = -1;
+		}
+		return code;
+	}
+	/**
+	 * @auth lijinpeng 2019年5月24日下午16:20
+	 * @param
+	 * @return ParkingNotice notice
+	 * @description 获取公告信息
+	 */
+	
+	@RequestMapping(value = "/getParkingNotice")
+	public ParkingNotice getParkingNotice() {
+		ParkingNotice notice = wxService.getParkingNotice();
+		int code = -1;
+		if(notice != null) {
+			code = 0;
+		}else {
+			code = -1;
+		}
+		return notice;
+	}
+	
+	/**
+	 * @auth lijinpeng 2019年5月24日下午18.08
+	 * @param
+	 * @return Volume 剩余车位
+	 * @description 获取可停车的数量
+	 */
+	@RequestMapping(value = "/getParkingVolume")
+	public ParkingLot getParkingVolume() {
+		return null;
+		
+	}
+	
 }
