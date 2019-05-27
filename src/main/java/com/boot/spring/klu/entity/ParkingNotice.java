@@ -27,9 +27,9 @@ public class ParkingNotice {
 	public void setNotice_time(Date notice_time) {
 		this.notice_time = notice_time;
 	}
-	public ParkingNotice(String id) { 
-		
-	}
+//	public ParkingNotice(String id) { 
+//		
+//	}
 	public void saveNotice(String content) {
 		this.content=content;
 		this.id=UUIDUtils.getUUID_16();

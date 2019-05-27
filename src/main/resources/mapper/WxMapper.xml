@@ -9,13 +9,27 @@
 		values(#{id},#{open_id},#{username},#{tel},#{car_no},#{parking_id},#{parking_time},#{remark})
 	</insert>
 	<select id="getAllUsers" resultType="com.boot.spring.klu.entity.UserParking">
-        select id,open_id,username,tel,car_no,parking_id,parking_time from user_parking
+        select * from user_parking where open_id =#{open_id}
     </select>
     <select id="getParkingNotice" resultType="com.boot.spring.klu.entity.ParkingNotice">
         select * from ParkingNotice order by notice_time desc limit 1
     </select>
+    <select id="spaceIsEmpty" resultType="com.boot.spring.klu.entity.ParkingLot">
+        select * from parking_lot where parking_volume > 0 order by parking_volume desc limit 1 
+    </select>
     
+    <select id="selectVolume" resultType="com.boot.spring.klu.entity.ParkingLot">
+        select parking_volume from parking_lot where id = #{parking_id}
+    </select>
     <delete id="cancelParking" >
     	delete from user_parking where id =#{id}
     </delete>
+   <update id="reduceVolume">
+		update parking_lot set parking_volume=#{number}
+	</update>
+
+	 <update id="updateParking">
+		update user_parking set username=#{username},tel=#{tel},car_no=#{car_no},parking_time=#{parking_time},remark=#{remark} where id=#{id}
+		
+	</update>
 </mapper>

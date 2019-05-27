@@ -72,6 +72,12 @@ public class AdminController {
 			return RetResponse.makeOKRsp(adminLogin);
 		}
 	}
+	
+//	@RequestMapping("/Login")
+//	public int login(HttpServletRequest request) {
+//		
+//		
+//	}
 
 	/**
 	 * @auth liweipeng 2019年5月13日下午11:59:30

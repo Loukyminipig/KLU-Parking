@@ -44,9 +44,15 @@ public class WxContronller {
 	public String welcome() {
 		return "welcome: ";
 	}
+	/**
+	 * 
+	 * TODO:预约，自动匹配空余停车场
+	 * author：lijinpeng
+	 */
 
 	@RequestMapping(value = "/appointment")
 	public int appointment(HttpServletRequest httpRequest) {
+		int code = -1;
 		String username = httpRequest.getParameter("username");
 		String tel = httpRequest.getParameter("tel");
 		String car_no = httpRequest.getParameter("car_no");
@@ -54,24 +60,44 @@ public class WxContronller {
 		String remark = httpRequest.getParameter("remark");
 		long id = UUIDUtils.getUUIDSimple();
 		System.out.println("id=-" + id);
-		String parking_id = "111111";
-		String open_id = "xxxxxx";
+		String parking_id = "x";
+		ParkingLot space = wxService.spaceIsEmpty();
+		if(space != null) {
+			parking_id = space.getId();
+		}else {
+			parking_id = "x";//x说明没有停车位，预约失败
+		}
+		String open_id = httpRequest.getParameter("open_id");
 		UserParking user = new UserParking(UUIDUtils.getUUIDSimple(), open_id, username, tel, car_no, parking_id, parking_time,remark);
 		System.out.println(user);
-		long result = wxService.appointment(user);
-		System.out.println("return====>" + result);
-		return UserCode.APPOINTMENT_SUCCESS;
+		boolean result = wxService.appointment(user);
+		if(result) {
+			if(!parking_id.equals("x")) {
+			ParkingLot selectV = wxService.selectVolume(parking_id);
+			int nums = selectV.getParking_volume();
+			boolean autoD = wxService.reduceVolume(nums-1);
+			if(autoD) {
+				code = 0;
+			}else {
+				code = -1;
+			}
+			}else {
+				code = -1;
+			}
+		}
+		return code;
+		
 	}
 
 	@RequestMapping("/appointmentList")
-	public List<UserParking> getUserList() {
-		List<UserParking> users = wxService.appointmentList();
+	public List<UserParking> appointmentList(HttpServletRequest httpRequest) {
+		String open_id = httpRequest.getParameter("open_id");
+		List<UserParking> users = wxService.appointmentList(open_id);
+		int code = -1;
 		if (users != null) {
-			for (UserParking user : users) {
-				System.out.println(user);
-			}
+			code = 0;
 		} else {
-			System.out.println("user list is null");
+			code = -1;
 		}
 		return users;
 	}
@@ -135,9 +161,10 @@ public class WxContronller {
 	
 	@RequestMapping(value = "/getParkingNotice")
 	public ParkingNotice getParkingNotice() {
-		ParkingNotice notice = wxService.getParkingNotice();
+		ParkingNotice notice = new ParkingNotice();
+		notice = wxService.getParkingNotice();
 		int code = -1;
-		if(notice != null) {
+		if(notice != CAN_NOT_FIND) {
 			code = 0;
 		}else {
 			code = -1;
@@ -148,7 +175,7 @@ public class WxContronller {
 	/**
 	 * @auth lijinpeng 2019年5月24日下午18.08
 	 * @param
-	 * @return Volume 剩余车位
+	 * @return Volume 剩余车位//数字图片形式，或者是解析对位形式
 	 * @description 获取可停车的数量
 	 */
 	@RequestMapping(value = "/getParkingVolume")
@@ -156,5 +183,28 @@ public class WxContronller {
 		return null;
 		
 	}
-	
+	/**
+	 * @auth lijinpeng 2019年5月27日晚上22.00
+	 * @param
+	 * @return code 
+	 * @description 用户修改预约停车接口
+	 * author：lijinpeng
+	 */
+	@RequestMapping(value = "/updateParking")
+	public int updateParking(HttpServletRequest httpRequest) {
+		int code = -1;
+		String id = httpRequest.getParameter("id");
+		String username = httpRequest.getParameter("username");
+		String tel = httpRequest.getParameter("tel");
+		String car_no = httpRequest.getParameter("car_no");
+		String parking_time = httpRequest.getParameter("parking_time");
+		String remark = httpRequest.getParameter("remark");
+		boolean result = wxService.updateParking(username, tel, car_no, parking_time, id, remark);
+		if(result) {
+			code = 0;
+		}else {
+			code = -1;
+		}
+		return code;
+	}
 }

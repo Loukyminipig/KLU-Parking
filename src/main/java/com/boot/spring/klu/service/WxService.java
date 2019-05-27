@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.boot.spring.klu.entity.ParkingLot;
 import com.boot.spring.klu.entity.ParkingNotice;
 import com.boot.spring.klu.entity.UserParking;
 import com.boot.spring.klu.mapper.WxMapper;
@@ -23,12 +24,12 @@ public class WxService {
 		return wxMapper.appointment(name, tel, car_no, parking_time, uuid, parking_id, open_id,remark);
 	}
 
-	public long appointment(UserParking user) {
+	public boolean appointment(UserParking user) {
 		return wxMapper.insertUser(user);
 	}
 
-	public List<UserParking> appointmentList() {
-		return wxMapper.getAllUsers();
+	public List<UserParking> appointmentList(String open_id) {
+		return wxMapper.getAllUsers(open_id);
 	}
 	
 	public boolean cancelParking(String id) {
@@ -37,6 +38,22 @@ public class WxService {
 	
 	public ParkingNotice getParkingNotice() {
 		return wxMapper.getParkingNotice();
+	}
+	
+	public ParkingLot spaceIsEmpty() {
+		return wxMapper.spaceIsEmpty();
+	}
+	
+	public ParkingLot selectVolume(String parking_id) {
+		return wxMapper.selectVolume(parking_id);
+	}
+	
+	public boolean reduceVolume(int number) {
+		return wxMapper.reduceVolume(number);
+	}
+	
+	public boolean updateParking(String username, String tel, String car_no, String parking_time, String id,String remark) {
+		return wxMapper.updateParking(username, tel, car_no, parking_time,id,remark);
 	}
 	
 }
